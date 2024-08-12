@@ -2,38 +2,37 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.User;
+import com.example.demo.repository.UserRepo;
 
 @Service
 public class UserService 
 {
-	List<User> list=new ArrayList<>();
-
-	public UserService() 
-	{
-		list.add(new User("pooja","pooja123","pooja@gmail.com"));
-		list.add(new User("om","om123","om@gmail.com"));
-	}
+	@Autowired
+	private UserRepo repo;
+	
 	
 	//get all user
 	public List<User> getAllUser()
 	{
-		return this.list;
+		return repo.findAll();
 	}
 	
 	//get sigle user
 	public User singleUser(String username)
 	{
-		return this.list.stream().filter((user)->user.getUsername().equals(username)).findAny().orElse(null);
+		User user=repo.findByUsername(username);
+		return user; 
 	}
 	
 	//add new user
 	public User adduser(User user)
 	{
-		this.list.add(user);
-		return user ;
+		return repo.save(user);
 	}
 }
